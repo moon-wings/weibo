@@ -1,0 +1,248 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	<title>微博事件</title>
+</head>
+<style>
+	*{
+		margin:0;
+		padding:0;
+		list-style:none;
+	}
+	.bao{
+		width:316px;
+		border:2px solid #8b2500;
+		overflow-y:auto;
+		min-height:30px;
+		margin:0 auto;
+		text-align:center;
+	}
+	.feeds{
+		width:80%;
+		margin:auto;
+		padding:20px;
+		overflow-y:auto;
+		text-align:center;
+	}
+	.tip{
+		width:318px;
+		padding:4px 0;
+		border:2px solid #8b2533;
+		margin:0 auto;
+		margin-bottom:5px;
+		text-align:center;
+		cursor:pointer; 
+		background:#8b7355;
+		color:#f7f7f7;
+	}
+	.feed{
+		width:80%;
+		padding:10px 10px;
+		border:1px solid #8b0000;
+		margin:5px auto;
+		margin-bottom:5px;
+		text-align:left;
+	}
+	.author{
+		display:block;
+		margin-bottom:11px;
+		border-bottom:1px dashed #c81623;
+		padding:2px 5px;
+		font-size:18px;
+		font-family:"楷体";
+		font-weight::400;
+		color:#8b4513;
+	}
+	.content{
+		font-size:13px;
+		font-family:"微软雅黑";
+		padding-left:5px;
+		margin-bottom:7px;
+		background:#8b5a2b;
+		color:#f5f5f5;
+	}
+	.zan{
+		cursor:pointer;
+		padding-left:5px;
+		font-size:14px;
+	}
+	.active{
+		color:#c81623;
+	}
+	.loading{
+		width:320px;
+		padding:20px;
+		background:#8b5a2b;
+		margin:0 auto;
+		color:#fff;
+	}
+	#t{
+		width:320px;
+		margin:middle;
+		margin-left:523px;
+		margin-top:5px
+	}
+	.send{
+		display:block;
+		width:50px;
+		height:25px;
+		margin-left:523px;
+		margin-bottom:5px;
+		background:#8b4726;
+		color:#f5f5f5;
+	}
+	.success{
+		background:#b012ff;
+		border:0 none;
+		color:#fff;
+	}
+	.mes{
+		position:absolute;
+		right:550px;
+		top:122px;
+		font-size:12px;
+		font-family:"微软雅黑"
+	}
+</style>
+<body>
+	<div class="tip">最新微博</div>
+	<textarea name="" id="t" cols="40" rows="5"></textarea>
+	<input type="submit" value="send" class="send">
+	<div class="mes"></div>
+	<div class="bao">
+		<div class="feeds">
+			<!-- <div class="feed">
+				<span class="author">如墨</span>
+				<p class="content">繁华三千</p>
+				<span class="zan">赞(100)</span>
+		    </div>
+		    <div class="feed">
+				<span class="author">轩烨</span>
+				<p class="content">江山如画</p>
+				<span class="zan">赞(200)</span>
+		    </div> -->
+		</div>
+		<div class="loading">loading...</div>
+	</div>
+</body>
+<script>
+    var bao=document.getElementsByClassName("bao")[0];
+	var loading=document.getElementsByClassName("loading")[0];
+	var zan=document.getElementsByClassName("zan");
+	var author=document.getElementsByClassName("author");
+	var content=document.getElementsByClassName("content");
+	var tip=document.querySelector(".tip");//直接就是对象
+	var feeds=document.querySelector(".feeds");
+	var area=document.getElementById("t");
+	var btn=document.querySelector(".send");
+	var mes=document.querySelector(".mes");
+	var data=[
+	            {author:String.fromCharCode(Math.floor(Math.random()*20000+20000)),content:String.fromCharCode(Math.floor(Math.random()*20000+20000)),zan:Math.floor(Math.random()*1000)}
+	         ]
+	var shuju=[{author:'如墨',content:'繁华三千',zan:'200'},
+	           {author:'轩烨',content:'江山如画',zan:'200'}
+	          ]
+//模拟数据
+//加载显示与消失
+	setTimeout(function(){
+		loading.style.display="none";
+		for(var i=0;i<shuju.length;i++){ //消失加载，显示遍历下的数组
+			var el=document.createElement('div');
+			el.classList.add('feed');
+			el.innerHTML='<span class="author">'+shuju[i].author+'</span><p class="content">'+shuju[i].content+'</p><span class="zan">赞('+shuju[i].zan+')</span>';
+			    feeds.insertBefore(el,feeds.firstElementChild);
+		}
+	},500)
+
+//利用事件委托点赞
+	bao.onclick=function(e){
+		var el=e.target;      //指得是谁
+		if(el.classList.contains("zan")){
+		  zanhandel.call(el,e);   // 调用函数
+		}
+	}
+	var zanhandel=function(){
+		if(this.classList.toggle("active")){   //toggle有值就会被删除，没有就会被添加值
+			var num=parseInt(this.innerHTML.slice(2,-1))+1;
+			this.innerHTML='赞('+num+')';     //this本身
+		}else{
+			var num=parseInt(this.innerHTML.slice(2,-1))-1;
+			this.innerHTML='赞('+num+')';
+		}
+
+	}
+
+//随机的微博添加
+	tip.onclick=function(){
+		for(var i=0;i<data.length;i++){
+			var arr=[];
+			var el=document.createElement('div');
+			el.classList.add('feed')
+			el.innerHTML='<span class="author">'+data[i].author+'</span><p class="content">'+data[i].content+'</p><span class="zan">赞('+data[i].zan+')</span>';
+			    feeds.insertBefore(el,feeds.firstElementChild);
+	    }
+	}
+
+
+	var jiance=function(){
+		if(state['con']==true){
+			btn.classList.add("success")
+		}else{
+			btn.classList.remove("success")
+		}
+	}
+	
+	btn.onclick=area.onkeydown=function(e){
+		var ev=e||window.event;
+		if(ev.type=="click"){
+			submit();
+			function submit(){
+			   val=area.value;
+			   val=val.replace(/^\s*|\s*\$/g,"");
+			   if(val==""){
+			   	  alert(null);
+			   	  state['con']=false;
+			   }else{
+			   	  var el=document.createElement("div");
+			   	  el.classList.add("feed");
+			   	  // btn.classList.add("success");
+			      el.innerHTML='<span class="author">醉月</span><p class="content">'+val+'</p><span class="zan">赞(0)</span>';
+			      bao.insertBefore(el,bao.firstElementChild);
+			      state['con']=true;
+			   }
+			   jiance()
+			}
+		}else if(ev.type=="keydown"){
+			if(ev.ctrlKey&&ev.keyCode==13){
+				submit();
+			}
+
+		}
+		area.onkeyup=area.onkeypress=function(){
+			var length=area.value.length;
+			if(length<=30){
+				mes.innerHTML="您已经输入了最多"+length+"个字，还可以输入"+(30-length)+"个字"
+			}else{
+				val=val.substr(0,30);
+				area.value=val;
+				mes.innerHTML="您已经输入了40个字，还可以输0个字"
+			}
+		}
+	}
+
+
+
+
+
+
+
+</script>
+</html>
+<!-- 加载不再feeds中，统一放在大容器里，loading获取值，并消失setTimeout中
+     遍历数据创建类四步  feeds点击事件委托  事件流中  数组中包含对象用这个输出console.table(arr)  1.默认显示一个加载中的提示
+       2.两秒钟后提示消失，出现两条列表
+       3.用事件委托的方式处理点赞+1和-1
+       4.点击有五条新微薄时，在页面中追加随机的微博
+       5.输入框输入过程中实时显示数字提示
+       6.根据输入框中的值发布一条新微博到列表中-->
